@@ -43,6 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
         children: <Widget>[
           InfoTitle(),
           FlatButton(
+            child: Text("Start native Camera"),
+            onPressed: _startCameraScreen,
+            textTheme: ButtonTextTheme.accent,
+          ),
+          FlatButton(
             child: Text("Start native PhotoEditor"),
             onPressed: _startPhotoEditorScreen,
             textTheme: ButtonTextTheme.accent,
@@ -53,6 +58,19 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  void _startCameraScreen() async {
+    print("_startCameraScreen");
+    var callDuration = "Unknown call duration.";
+    try {
+      callDuration = await platform.invokeMethod("openCamera");
+    } on PlatformException catch (_) {
+      callDuration = "Failed to get call duration.";
+    }
+    setState(() {
+      _callDuration = callDuration;
+    });
   }
 
   void _startPhotoEditorScreen() async {

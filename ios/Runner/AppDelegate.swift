@@ -5,6 +5,13 @@ import PhotoEditorSDK
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
     
+    override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+            if let licenseURL = Bundle.main.url(forResource: "license", withExtension: "dms") {
+               PESDK.unlockWithLicense(at: licenseURL)
+            }
+        return true
+    }
+    
     override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -22,7 +29,8 @@ import PhotoEditorSDK
             case "openPhotoEditor":
                 result("Result from openPhotoEditor")
                 self?.presentPhotoEditorScreen(viewController: controller, result: result)
-                
+            case "openCamera":
+                self?.presentCameraScreen(viewController: controller, result: result)
             default:
                 result(FlutterMethodNotImplemented)
              }
@@ -33,12 +41,14 @@ import PhotoEditorSDK
     }
     
     func presentPhotoEditorScreen(viewController: UIViewController, result: @escaping FlutterResult) {
-        NSLog("### presentPhotoEditorScreen")
         // guard let url = Bundle.main.url(forResource: "LA", withExtension: "jpg") else {
         //   return
         // }
         // let photo = Photo(url: url)
-//        viewController.present(createPhotoEditViewController(with: nil), animated: true, completion: nil)
+        // viewController.present(createPhotoEditViewController(with: nil), animated: true, completion: nil)
+    }
+    
+    func presentCameraScreen(viewController: UIViewController, result: @escaping FlutterResult) {
         viewController.present(createCameraViewController(), animated: true, completion: nil)
     }
     
@@ -53,8 +63,6 @@ import PhotoEditorSDK
     }
     
     private func createPhotoEditViewController(with photo: Photo, and photoEditModel: PhotoEditModel = PhotoEditModel()) -> PhotoEditViewController {
-        NSLog("### createPhotoEditViewController")
-        
       let configuration = buildConfiguration()
       let photoEditViewController = PhotoEditViewController(photoAsset: photo, configuration: configuration, photoEditModel: photoEditModel)
       photoEditViewController.modalPresentationStyle = .fullScreen
@@ -80,17 +88,6 @@ import PhotoEditorSDK
 
           options.menuItems = menuItems
         }
-
-//        // Configure sticker tool
-//        builder.configureStickerToolController { options in
-//          // Enable personal stickers
-//          options.personalStickersEnabled = true
-//          // Enable smart weather stickers
-//          options.weatherProvider = self.weatherProvider
-//        }
-//
-//        // Configure theme
-//        builder.theme = self.theme
       }
 
       return configuration
