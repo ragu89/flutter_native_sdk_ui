@@ -6,18 +6,16 @@ import PhotoEditorSDK
 @objc class AppDelegate: FlutterAppDelegate {
     
     override func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-            if let licenseURL = Bundle.main.url(forResource: "license", withExtension: "dms") {
-               PESDK.unlockWithLicense(at: licenseURL)
-            }
-        return true
+        if let licenseURL = Bundle.main.url(forResource: "license", withExtension: "dms") {
+           PESDK.unlockWithLicense(at: licenseURL)
+        }
+    return true
     }
     
     override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+      _ application: UIApplication,
+      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        
-        NSLog("### AppDelegate")
         
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let photoEditorChannel = FlutterMethodChannel(name: "ch.ragu.flutter_native_sdk/photoEditorChannel",
@@ -36,8 +34,8 @@ import PhotoEditorSDK
              }
         })
 
-        GeneratedPluginRegistrant.register(with: self)
-        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    GeneratedPluginRegistrant.register(with: self)
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     func presentPhotoEditorScreen(viewController: UIViewController, result: @escaping FlutterResult) {
