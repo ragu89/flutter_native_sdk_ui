@@ -84,8 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var assetPath = "assets/images/LA.jpg";
       var tempFilePath = await _copyFileInTemp(assetPath);
 
-      //TODO: Send the tempFilePath in parameter of the Channel
-      callDuration = await platform.invokeMethod("openPhotoEditor");
+      callDuration = await platform.invokeMethod("openPhotoEditor", tempFilePath);
     } on PlatformException catch (_) {
       callDuration = "Failed to get call duration.";
     }

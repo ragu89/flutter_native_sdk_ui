@@ -25,8 +25,8 @@ import PhotoEditorSDK
              [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
              switch call.method {
             case "openPhotoEditor":
-                result("Result from openPhotoEditor")
-                self?.presentPhotoEditorScreen(viewController: controller, result: result)
+                let imagePath = (call.arguments as? String)
+                self?.presentPhotoEditorScreen(viewController: controller, imagePath:imagePath, result: result)
             case "openCamera":
                 self?.presentCameraScreen(viewController: controller, result: result)
             default:
@@ -38,12 +38,14 @@ import PhotoEditorSDK
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
-    func presentPhotoEditorScreen(viewController: UIViewController, result: @escaping FlutterResult) {
-        // guard let url = Bundle.main.url(forResource: "LA", withExtension: "jpg") else {
-        //   return
-        // }
-        // let photo = Photo(url: url)
-        // viewController.present(createPhotoEditViewController(with: nil), animated: true, completion: nil)
+    func presentPhotoEditorScreen(viewController: UIViewController, imagePath: String?, result: @escaping FlutterResult) {
+        if (imagePath == nil) {
+            result("no image received in arguments")
+            return
+        }
+        let url = URL(fileURLWithPath: imagePath!)
+        let photo = Photo(url: url)
+        viewController.present(createPhotoEditViewController(with: photo), animated: true, completion: nil)
     }
     
     func presentCameraScreen(viewController: UIViewController, result: @escaping FlutterResult) {
