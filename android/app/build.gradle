@@ -23,10 +23,52 @@ if (flutterVersionName == null) {
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
+apply plugin: 'ly.img.android.sdk'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+imglyConfig {
+
+    pesdk {
+        enabled true
+        licencePath 'LICENSE' // Name of the Licence file in the asset folder
+    }
+
+    // Define the modules you are need
+    modules {
+        // Add all the UI modules you are need
+        include 'ui:core'
+        include 'ui:text'
+        include 'ui:focus'
+        include 'ui:frame'
+        include 'ui:brush'
+        include 'ui:filter'
+        include 'ui:camera'
+        include 'ui:sticker'
+        include 'ui:overlay'
+        include 'ui:transform'
+        include 'ui:adjustment'
+        include 'ui:text-design'
+
+        // Add the serializer if you need
+        include 'backend:serializer'
+        
+        // Allow Background Encoding [Optional]
+        include 'backend:headless'
+
+        // Add asset packs if you need
+        include 'assets:font-basic'
+        include 'assets:frame-basic'
+        include 'assets:filter-basic'
+        include 'assets:overlay-basic'
+        include 'assets:sticker-shapes'
+        include 'assets:sticker-emoticons'
+        include 'backend:sticker-smart'
+    }
+}
+
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
+    buildToolsVersion '30.0.2'
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -38,9 +80,9 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.flutter_native_sdk_ui"
+        applicationId "com.photoeditorsdk.android.app"
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
