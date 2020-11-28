@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
   runApp(MyApp());
@@ -41,6 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
+          // Image(image: AssetImage("assets/images/LA.jpg")),
           InfoTitle(),
           FlatButton(
             child: Text("Start native Camera"),
@@ -54,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ShowDuration(
             callDuration: _callDuration,
-          )
+          ),
         ],
       ),
     );
@@ -77,6 +81,10 @@ class _MyHomePageState extends State<MyHomePage> {
     print("_startPhotoEditorScreen");
     var callDuration = "Unknown call duration.";
     try {
+      var assetPath = "assets/images/LA.jpg";
+      var tempFilePath = await _copyFileInTemp(assetPath);
+
+      //TODO: Send the tempFilePath in parameter of the Channel
       callDuration = await platform.invokeMethod("openPhotoEditor");
     } on PlatformException catch (_) {
       callDuration = "Failed to get call duration.";
@@ -84,6 +92,24 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _callDuration = callDuration;
     });
+  }
+
+  Future<String> _copyFileInTemp(String assetPath) async {
+    var hash = DateTime.now().toIso8601String();
+    var dir = Directory.systemTemp.createTempSync();
+    var tempFilePath = "${dir.path}/$hash";
+
+    try {
+      var bytes = await rootBundle.load(assetPath);
+      final buffer = bytes.buffer;
+      var tempFile = new File(tempFilePath);
+      await tempFile.writeAsBytes(
+          buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes));
+      return tempFilePath;
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }
 
